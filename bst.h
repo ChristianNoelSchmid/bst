@@ -15,9 +15,14 @@ namespace bst
     /* Node struct
      * An definition of the inner-node of a BST. Includes
      * a data element, and connected child nodes. Template
-     * type, to allow multiple types of values */
-    template<class T>
-    struct BSTNode
+     * type, to allow multiple types of values 
+     * Node struct has two separate templates - one for generics
+     * of non-pointer types, and one for pointer types. This is
+     * done to ensure that dynamic casting is possible for the BST.
+     */
+
+    // Non-pointer type
+    template<class T> struct BSTNode
     {
         T element;
         BSTNode<T> *left;
@@ -30,8 +35,8 @@ namespace bst
         ~BSTNode();
     };
 
-    template<class T>
-    struct BSTNode<T*>
+    // Pointer type
+    template<class T> struct BSTNode<T*>
     {
         T* element;
         BSTNode<T> *left;
@@ -39,8 +44,7 @@ namespace bst
         
         BSTNode();
         BSTNode(const BSTNode<T*> & source);
-        BSTNode(const T & elem);
-        BSTNode(const T *elem);
+        BSTNode(T *elem);
         ~BSTNode();
     };
 
@@ -50,28 +54,6 @@ namespace bst
      * included in header, to avoid templatiie
      * inclusion issues */
     template<class T> BSTNode<T>::BSTNode() : element(NULL), left(NULL), right(NULL) { } 
-
-    template<class T> BSTNode<T*>::BSTNode() : left(NULL), right(NULL)
-    {
-        element = NULL;
-    }
-    template<class T> BSTNode<T*>::BSTNode(const BSTNode<T*> & source)
-    {
-        element = new T(*(source.element)); 
-        left = right = NULL;
-    }
-
-    template<class T> BSTNode<T*>::BSTNode(const T & elem)
-    {
-        element = new T(elem);
-        left = right = NULL;
-    }
-
-    template<class T> BSTNode<T*>::BSTNode(const T *elem)
-    {
-        element = new T(*elem);
-        left = right = NULL;
-    }
 
     template<class T> BSTNode<T>::BSTNode(const T & elem) : left(NULL), right(NULL)
     {
@@ -85,6 +67,28 @@ namespace bst
         }
     }
 
+    template<class T> BSTNode<T>::~BSTNode() 
+    {
+        delete left;
+        delete right;
+    }
+
+    template<class T> BSTNode<T*>::BSTNode() : left(NULL), right(NULL)
+    {
+        element = NULL;
+    }
+    template<class T> BSTNode<T*>::BSTNode(const BSTNode<T*> & source)
+    {
+        element = new T(*(source.element)); 
+        left = right = NULL;
+    }
+
+    template<class T> BSTNode<T*>::BSTNode(T *elem)
+    {
+        element = elem;
+        left = right = NULL;
+    }
+
     template<class T> BSTNode<T*>::~BSTNode()
     {
         delete element;
@@ -92,11 +96,5 @@ namespace bst
         delete right;
 
         left = right = NULL;
-    }
-
-    template<class T> BSTNode<T>::~BSTNode() 
-    {
-        delete left;
-        delete right;
-    }
+    }    
 }
