@@ -4,12 +4,31 @@
 
 #include "account.h"
 #include "bst.h"
-using namespace bst;
 
 int main()
 {
-    BSTNode<Account*> account = BSTNode<Account*>(new SavingsAccount(12.75, "Chris", 0.045));
-    account.element->print_info();
+    using namespace bst;
+    using namespace std;
+
+    BST<string> bst = BST<string>();
+    bst.insert("Hello");
+    bst.insert("World!");
+    bst.insert("My");
+    bst.insert("name");
+    bst.insert("Is");
+    bst.insert("Oliver!");
+    bst.insert("Nab");
+    bst.insert("Zanzibar");
+
+    cout << "Initial BST: "; bst.print(); cout << "Vertex count: " << bst.vtx_count() << endl;
+    cout << "Removing Nab..."; bst.remove("Nab");
+    bst.print(); cout << "Vertex count: " << bst.vtx_count() << endl;
+    cout << "Removing Hello..."; bst.remove("Hello");
+    bst.print(); cout << "Vertex count: " << bst.vtx_count() << endl;
+    cout << "Removing Oliver!..."; bst.remove("Oliver!");
+    bst.print(); cout << "Vertex count: " << bst.vtx_count() << endl;
+    cout << "Removing Is..."; bst.remove("Is");
+    bst.print(); cout << "Vertex count: " << bst.vtx_count() << endl;
    
     return 0;
 }
