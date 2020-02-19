@@ -6,6 +6,7 @@
  */
 
 #include<iostream>
+#include<fstream>
 
 namespace bst
 {
@@ -47,6 +48,7 @@ namespace bst
             bool remove(const T & element);
 
             void print() const;
+            void to_dot(std::string filename) const;
 
         private:
             BSTNode<T> *root;
@@ -57,6 +59,8 @@ namespace bst
 
             void print_helper(const BSTNode<T> *current) const;
             BSTNode<T> *& get_leftmost(BSTNode<T> *& current);
+
+            void to_dot_helper(std::ofstream & file_out, const BSTNode<T> *current) const;
     };
 
     // Pointer type
@@ -129,7 +133,7 @@ namespace bst
             return;
         }
 
-        if(current->element < element)
+        if(element < current->element)
         {
             insert_helper(element, current->left);
         }
@@ -213,6 +217,40 @@ namespace bst
             return current;
         }
         return get_leftmost(current->left);
+    }
+
+    template<class T> void BST<T>::to_dot(std::string filename) const
+    {
+        std::ofstream file_out = std::ofstream();
+        file_out.open(filename);
+
+        if(file_out)
+        {
+            for(int i = 0; i < 4; ++i) filename.pop_back();
+
+            file_out << "digraph " << filename << " {\n";
+            to_dot_helper(file_out, root);
+            file_out << "}";
+
+            file_out.close();        
+        }
+    }
+
+    template<class T> void BST<T>::to_dot_helper(std::ofstream & file_out, const BSTNode<T> *current) const
+    {
+        if(current != NULL)
+        {
+            if(current->left != NULL)
+            {
+                file_out << "\"" << current->element << "\" -> \"" << current->left->element << "\";\n";
+                to_dot_helper(file_out, current->left);
+            }
+            if(current->right != NULL)
+            {
+                file_out << "\"" << current->element << "\" -> \"" << current->right->element << "\";\n";
+                to_dot_helper(file_out, current->right);
+            }
+        }
     }
 
 
